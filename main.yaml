@@ -101,7 +101,7 @@ spec:
             name: frontend-ms-service
             port:
               number: 80
-      - path: /ticket-healthcheck
+      - path: /ticket-health-check
         pathType: Prefix 
         backend:
           service:
