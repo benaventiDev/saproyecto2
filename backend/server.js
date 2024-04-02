@@ -36,7 +36,7 @@ app.use('backend/users', Users)
 app.use('backend/tickets', Tickets)
 // Health check route
 app.get('/backend', (req, res) => {
-  res.status(200).send('OK from backend');
+  res.status(200).send(`OK from backend: ${req.path}`);
 });
 app.get('*', (req, res) => {
   res.status(200).send(`OK: ${req.path}`);
