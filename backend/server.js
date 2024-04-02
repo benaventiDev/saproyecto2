@@ -35,7 +35,10 @@ var Tickets = require('./routes/Tickets')
 app.use('/users', Users)
 app.use('/tickets', Tickets)
 // Health check route
-app.get('/ticket-health-check', (req, res) => {
+app.get('/backend', (req, res) => {
+  res.status(200).send('OK');
+});
+app.get('/', (req, res) => {
   res.status(200).send('OK');
 });
 app.listen(port, function () {
