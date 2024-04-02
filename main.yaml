@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Namespace
 metadata: 
-  name: proyectoSA
+  name: proyecto-fase2
 #################Backend Deployment/Service#####################
 ---
 apiVersion: apps/v1
