@@ -39,7 +39,7 @@ app.get('/backend', (req, res) => {
   res.status(200).send('OK from backend');
 });
 app.get('*', (req, res) => {
-  res.status(200).send('OK');
+  res.status(200).send(`OK: ${req.path}`);
 });
 app.listen(port, function () {
   console.log('Server is running on port: ' + port)
