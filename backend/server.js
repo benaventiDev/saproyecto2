@@ -32,11 +32,11 @@ app.use(bodyParser.json())
 var Users = require('./routes/Users')
 var Tickets = require('./routes/Tickets')
 
-app.use('/users', Users)
-app.use('/tickets', Tickets)
+app.use('backend/users', Users)
+app.use('backend/tickets', Tickets)
 // Health check route
-app.get('/ticket', (req, res) => {
-  res.status(200).send('OK');
+app.get('/backend', (req, res) => {
+  res.status(200).send('OK from backend');
 });
 app.get('*', (req, res) => {
   res.status(200).send('OK');

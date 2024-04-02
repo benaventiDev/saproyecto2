@@ -29,7 +29,7 @@ spec:
         - containerPort: 5000
         env:
         - name: REACT_APP_BACKEND_URL
-          value: "test1"
+          value: "test"
 ---
 apiVersion: v1
 kind: Service
@@ -70,7 +70,7 @@ spec:
         - containerPort: 3000
         env:
         - name: REACT_APP_BACKEND_URL
-          value: http://34.49.110.80/
+          value: http://34.49.110.80/backend
 ---
 apiVersion: v1
 kind: Service
@@ -103,7 +103,7 @@ spec:
             name: frontend-ms-service
             port:
               number: 80
-      - path: /ticket
+      - path: /backend
         pathType: Prefix 
         backend:
           service:
