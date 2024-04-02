@@ -103,12 +103,6 @@ spec:
             name: frontend-ms-service
             port:
               number: 80
-      - path: /ticket
-        pathType: Prefix 
-        backend:
-          service:
-            name: backend-ms-service
-            port:
-              number: 80
+
 
 
