@@ -1,0 +1,110 @@
+#################Namespace#####################
+---
+apiVersion: v1
+kind: Namespace
+metadata: 
+  name: proyectoSA
+#################Backend Deployment/Service#####################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-ms
+  namespace: proyectoSA
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-ms
+  template:
+    metadata:
+      labels:
+        app: backend-ms
+    spec:
+      containers:
+      - name: backend-ms
+        image: benaventi/backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-ms-service
+  namespace: proyectoSA
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 5000 
+      protocol: TCP
+  selector:
+    app: backend-ms
+
+#################Frontend Deployment/Service#####################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-ms
+  namespace: proyectoSA
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-ms
+  template:
+    metadata:
+      labels:
+        app: frontend-ms
+    spec:
+      containers:
+      - name: frontend-ms
+        image: benaventi/frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-ms-service
+  namespace: proyectoSA
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80  # External port
+      targetPort: 3000  # Container's port
+      protocol: TCP
+  selector:
+    app: frontend-ms
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: proyectoSA
+  name: ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /ticket
+        pathType: Prefix 
+        backend:
+          service:
+            name: frontend-ms-service
+            port:
+              number: 80
+      - path: /backend-health
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-ms-service
+            port:
+              number: 80
+
+
+
