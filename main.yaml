@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
       - name: frontend-ms
-        image: benaventi/frontend:latest
+        image: benaventi/frontendsa:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
@@ -99,13 +99,6 @@ spec:
         backend:
           service:
             name: frontend-ms-service
-            port:
-              number: 80
-      - path: /backend-health
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-ms-service
             port:
               number: 80
 
