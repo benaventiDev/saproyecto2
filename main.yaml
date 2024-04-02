@@ -70,7 +70,7 @@ spec:
         - containerPort: 3000
         env:
         - name: REACT_APP_BACKEND_URL
-          value: http://backend-ms-service:80
+          value: http://backend-ms-service:80/ticket
 ---
 apiVersion: v1
 kind: Service
