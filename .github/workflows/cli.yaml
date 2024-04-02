@@ -10,7 +10,7 @@ on:
     branches: [master]
 
 jobs:
-  build-java:
+  update-dockerhub:
     runs-on: ubuntu-latest
 
     steps:

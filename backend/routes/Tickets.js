@@ -24,7 +24,7 @@ var storage = multer.diskStorage({
         cb(null, Date.now() + "-" + file.originalname.toLowerCase().split(' ').join('-'))
     }
 });
-
+var test = 1;
 
 var upload = multer({
     storage: storage
