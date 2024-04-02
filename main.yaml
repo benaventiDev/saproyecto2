@@ -70,7 +70,7 @@ spec:
         - containerPort: 3000
         env:
         - name: REACT_APP_BACKEND_URL
-          value: http://backend-ms-service:80/
+          value: http://34.49.110.80/
 ---
 apiVersion: v1
 kind: Service
@@ -103,6 +103,12 @@ spec:
             name: frontend-ms-service
             port:
               number: 80
-
+      - path: /ticket
+        pathType: Prefix 
+        backend:
+          service:
+            name: backend-ms-service
+            port:
+              number: 80
 
 
