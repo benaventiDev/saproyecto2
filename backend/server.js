@@ -32,8 +32,13 @@ app.use(bodyParser.json())
 var Users = require('./routes/Users')
 var Tickets = require('./routes/Tickets')
 
+
+
+
+
 app.use('/backend/users', Users)
 app.use('/backend/tickets', Tickets)
+
 // Health check route
 app.get('/backend', (req, res) => {
   res.status(200).send(`OK from backend: ${req.path}`);
@@ -41,6 +46,11 @@ app.get('/backend', (req, res) => {
 app.get('*', (req, res) => {
   res.status(200).send(`OK: ${req.path}`);
 });
+app.post('*', (req, res) => {
+  res.status(400).send(`OK: ${req.path}`);
+});
+
+
 app.listen(port, function () {
   console.log('Server is running on port: ' + port)
 })
