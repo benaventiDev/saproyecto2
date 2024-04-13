@@ -28,13 +28,17 @@ jobs:
           git config --global user.email "201021212@ingenieria.usac.edu.gt"
           git config --global user.name "benaventiDev"
 
-      - name: Merge with develop
+      - name: Fetch and prepare develop branch
         run: |
           git fetch origin develop:develop
           git checkout develop
-          git merge ${{ github.ref }} --allow-unrelated-histories --no-ff --no-edit
-          git checkout ${{ github.ref }}
+          git merge refs/heads/feature-new-endpoint --allow-unrelated-histories --no-ff --no-edit -X theirs
+
+      - name: Switch to feature branch and merge develop using ours strategy
+        run: |
+          git checkout refs/heads/feature-new-endpoint
           git merge develop --allow-unrelated-histories --no-ff -X ours
+
       # Instala dependencias y pruebas para el backend principal
       - name: Install Dependencies (Backend)
         run: npm install
