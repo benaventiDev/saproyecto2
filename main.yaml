@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: backend-ms
-        image: benaventi/backend:latest
+        image: benaventi/backend2:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
