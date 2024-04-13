@@ -35,7 +35,12 @@ jobs:
           git checkout -B develop origin/develop  # Asegura que develop esté actualizado y cambia a esa rama.
           git merge feature-new-endpoint --allow-unrelated-histories -X theirs --no-ff --no-edit
       - name: Push changes to develop
+        env:
+          MY_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
+          git config --global user.email "201021212@ingenieria.usac.edu.gt"
+          git config --global user.name "benaventiDev"
+          git remote set-url origin https://x-access-token:${MY_GITHUB_TOKEN}@github.com/benaventiDev/saproyecto2.git
           git push origin develop
 
   build-and-test:
