@@ -34,6 +34,9 @@ jobs:
         run: |
           git checkout -B develop origin/develop  # Asegura que develop esté actualizado y cambia a esa rama.
           git merge feature-new-endpoint --allow-unrelated-histories -X theirs --no-ff --no-edit
+      - name: Push changes to develop
+        run: |
+          git push origin develop
 
   build-and-test:
     needs: prepare-branches
