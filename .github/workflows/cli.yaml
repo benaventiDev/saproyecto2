@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.MY_PERSONAL_TOKEN }} # Usar el PAT para el checkout
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # Usar el PAT para el checkout
 
       - name: Set up Git identity
         run: |
@@ -31,7 +31,7 @@ jobs:
           # Cualquier operación Git adicional aquí
           git push origin HEAD:develop  # Ejemplo de push
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_PERSONAL_TOKEN }} #
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} #
 
   build-and-test:
     needs: prepare-branches
