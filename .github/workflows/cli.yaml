@@ -64,13 +64,3 @@ jobs:
           CI: false
         run: npm run build
         working-directory: ./frontend
-
-      - name: Deploy to GCP VM
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.GCP_VM_IP }}
-          username: "your-vm-username"
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /path/to/your/project
-            docker-compose up -d
