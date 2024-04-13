@@ -19,19 +19,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # Usar el PAT para el checkout
+          ref: feature-new-endpoint
 
       - name: Set up Git identity
         run: |
           git config --global user.email "201021212@ingenieria.usac.edu.gt"
           git config --global user.name "benaventiDev"
 
-      - name: Additional Git operations
+      - name: Force push to develop
         run: |
-          # Cualquier operación Git adicional aquí
-          git push origin HEAD:develop  # Ejemplo de push
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} #
+          git fetch --all
+          git checkout develop
+          git reset --hard feature-new-endpoint
+          git push origin develop --force
 
   build-and-test:
     needs: prepare-branches
