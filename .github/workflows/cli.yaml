@@ -5,7 +5,9 @@ name: update-and-test
 
 on:
   push:
-    branches: [master, feature-new-endpoint]
+    branches:
+      - feature-*
+      - develop
   pull_request:
     branches: [master, feature-new-endpoint]
 
@@ -21,7 +23,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18.6.0"
+      - name: Set up Git identity
+        run: |
+          git config --global user.email "201021212@ingenieria.usac.edu.gt"
+          git config --global user.name "benaventiDev"
 
+      - name: Merge with develop
+        run: |
+          git fetch origin develop:develop
+          git checkout develop
+          git merge ${{ github.ref }} --no-ff --no-edit
+          git checkout ${{ github.ref }}
+          git merge develop --no-ff --no-edit
       # Instala dependencias y pruebas para el backend principal
       - name: Install Dependencies (Backend)
         run: npm install
@@ -51,3 +64,13 @@ jobs:
           CI: false
         run: npm run build
         working-directory: ./frontend
+
+      - name: Deploy to GCP VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCP_VM_IP }}
+          username: "your-vm-username"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path/to/your/project
+            docker-compose up -d
