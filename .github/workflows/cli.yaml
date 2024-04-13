@@ -32,9 +32,9 @@ jobs:
         run: |
           git fetch origin develop:develop
           git checkout develop
-          git merge ${{ github.ref }} --no-ff --no-edit
+          git merge ${{ github.ref }} --allow-unrelated-histories --no-ff --no-edit
           git checkout ${{ github.ref }}
-          git merge develop --no-ff --no-edit
+          git merge develop --allow-unrelated-histories --no-ff --no-edit
       # Instala dependencias y pruebas para el backend principal
       - name: Install Dependencies (Backend)
         run: npm install
