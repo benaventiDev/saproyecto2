@@ -78,7 +78,7 @@ metadata:
   name: frontend-ms-service
   namespace:  proyecto-fase2
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 80  # External port
       targetPort: 3000  # Container's port
