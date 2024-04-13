@@ -1,6 +1,6 @@
 import axios from 'axios'
 const apiConfig = require('../apiConfig');
-const { BACKEND_URL } = apiConfig;
+const { BACKEND_URL, BACKEND_ALL_TICKETS_URL } = apiConfig;
 
 export const ticket = newTicket => {
   return axios
@@ -17,7 +17,7 @@ export const ticket = newTicket => {
 
 export const getTicket = test => {
   return axios
-    .get(`${BACKEND_URL}/tickets/getTicketAll`, {
+    .get(`${BACKEND_ALL_TICKETS_URL}/tickets/getTicketAll`, {
       //headers: { Authorization: ` ${this.getToken()}` }
     })
     .then(response => {
