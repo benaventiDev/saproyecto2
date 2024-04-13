@@ -39,7 +39,7 @@ jobs:
           git checkout refs/heads/feature-new-endpoint
           git merge develop --allow-unrelated-histories --no-ff -X ours
 
-      # Instala dependencias y pruebas para el backend principal
+      # Instala dependencias y/o pruebas para el backend principal
       - name: Install Dependencies (Backend)
         run: npm install
         working-directory: ./backend
