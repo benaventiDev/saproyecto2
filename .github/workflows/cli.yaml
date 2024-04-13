@@ -24,14 +24,15 @@ jobs:
           git config --global user.email "201021212@ingenieria.usac.edu.gt"
           git config --global user.name "benaventiDev"
 
-      - name: Fetch and prepare develop branch
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Ensure feature-new-endpoint is up to date
+        run: git reset --hard origin/feature-new-endpoint
+
+      - name: Checkout develop and merge changes from feature-new-endpoint
         run: |
-          git fetch origin feature-new-endpoint:feature-new-endpoint
-          git checkout feature-new-endpoint
-      - name: Switch to feature branch and merge develop using ours strategy
-        run: |
-          git fetch origin develop:develop
-          git checkout develop
+          git checkout -B develop origin/develop  # Asegura que develop esté actualizado y cambia a esa rama.
           git merge feature-new-endpoint --allow-unrelated-histories -X theirs --no-ff --no-edit
 
   build-and-test:
