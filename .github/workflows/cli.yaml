@@ -12,17 +12,13 @@ on:
     branches: [master, feature-new-endpoint]
 
 jobs:
-  update-docker:
+  prepare-branches:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.6.0"
       - name: Set up Git identity
         run: |
           git config --global user.email "201021212@ingenieria.usac.edu.gt"
@@ -39,6 +35,16 @@ jobs:
           git checkout refs/heads/feature-new-endpoint
           git merge develop --allow-unrelated-histories --no-ff -X ours
 
+  build-and-test:
+    needs: prepare-branches
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.6.0"
       # Instala dependencias y/o pruebas para el backend principal
       - name: Install Dependencies (Backend)
         run: npm install
