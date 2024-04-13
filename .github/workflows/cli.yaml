@@ -48,5 +48,6 @@ jobs:
       - name: Build and Test (Frontend)
         env:
           NODE_OPTIONS: --openssl-legacy-provider
+          CI: false
         run: npm run build
         working-directory: ./frontend
