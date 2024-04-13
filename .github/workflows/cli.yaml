@@ -26,14 +26,13 @@ jobs:
 
       - name: Fetch and prepare develop branch
         run: |
-          git fetch origin develop:develop
-          git checkout develop
-          git merge refs/heads/feature-new-endpoint --allow-unrelated-histories --no-ff --no-edit -X theirs
-
+          git fetch origin feature-new-endpoint:feature-new-endpoint
+          git checkout feature-new-endpoint
       - name: Switch to feature branch and merge develop using ours strategy
         run: |
-          git checkout refs/heads/feature-new-endpoint
-          git merge develop --allow-unrelated-histories --no-ff -X ours
+          git fetch origin develop:develop
+          git checkout develop
+          git merge feature-new-endpoint --allow-unrelated-histories -X theirs --no-ff --no-edit
 
   build-and-test:
     needs: prepare-branches
