@@ -53,7 +53,7 @@ jobs:
         run: npm run build && npm test
         working-directory: ./backend-getalltickets
 
-      # Instala dependencias y pruebas para el frontend
+      # Instala dependencias y/o pruebas para el frontend
       - name: Install Dependencies (Frontend)
         run: npm install
         working-directory: ./frontend
