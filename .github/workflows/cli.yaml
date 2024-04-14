@@ -28,7 +28,7 @@ jobs:
         run: |
           git fetch origin develop:develop
           git checkout develop
-          git merge --strategy-option theirs main --no-ff --no-commit
+          git merge --strategy-option theirs feature-new-endpoint --no-ff --no-commit
           git commit -m "Despliegue automático a Develop"
           git push --force origin develop
 
