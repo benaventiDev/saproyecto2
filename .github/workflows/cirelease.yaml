@@ -5,9 +5,9 @@ name: update-and-test
 
 on:
   push:
-    branches: [master, feature-new-endpoint]
+    branches: [release]
   pull_request:
-    branches: [master, feature-new-endpoint]
+    branches: [release]
 
 jobs:
   update-docker:
@@ -43,32 +43,3 @@ jobs:
           context: ./backend-getalltickets
           push: true
           tags: benaventi/backendtickets:latest
-
-
-
-
-      - name: Deploy to GCP VM
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.GCP_VM_IP }}
-          username: "your-vm-username"
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /path/to/your/project
-            docker-compose up -d
-
-
-  deploy-development-environment:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Deploy to Development Environment
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.GCP_VM_IP }}
-          username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            /home/softwaavanzado/proyecto2/saproyecto2/update-development.sh

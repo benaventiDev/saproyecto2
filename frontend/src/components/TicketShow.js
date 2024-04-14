@@ -11,7 +11,7 @@ import { Dropdown, Badge, Modal } from 'react-bootstrap';
 import Paper from '@material-ui/core/Paper';
 import { Button } from 'react-bootstrap';
 const apiConfig = require('../apiConfig');
-const { BACKEND_URL } = apiConfig;
+const { BACKEND_URL, BACKEND_ALL_TICKETS_URL } = apiConfig;
 
 class ShowTickets extends Component {
   constructor() {
@@ -29,7 +29,7 @@ class ShowTickets extends Component {
 
   getTicket = test => {
     return axios
-      .get(`${BACKEND_URL}/tickets/getTicketAll`, {
+      .get(`${BACKEND_ALL_TICKETS_URL}/tickets/getTicketAll`, {
 
       })
       .then(response => {
@@ -142,7 +142,7 @@ class ShowTickets extends Component {
 
   changeStatus(id, status) {
     return axios
-      .put('http://34.173.225.143:5000/tickets/changeStatus', {
+      .put(`${BACKEND_URL}/tickets/changeStatus`, {
         id,
         status
 
@@ -160,7 +160,7 @@ class ShowTickets extends Component {
   }
   statusFilter(status) {
     return axios
-      .post('http://34.173.225.143:5000/tickets/filterStatus', {
+      .post(`${BACKEND_URL}/tickets/filterStatus`, {
         status
       })
       .then(response => {
@@ -181,7 +181,7 @@ class ShowTickets extends Component {
 
   addMessage(id, messages) {
     return axios
-      .post('http://34.173.225.143:5000/tickets/addMessages', {
+      .post(`${BACKEND_URL}/tickets/addMessages`, {
         id, messages
       })
       .then(response => {
