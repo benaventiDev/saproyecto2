@@ -11,31 +11,44 @@ on:
   pull_request:
     branches: [master, feature-new-endpoint]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  update-docker:
+  prepare-branches:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
         with:
-          node-version: "18.6.0"
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
       - name: Set up Git identity
         run: |
           git config --global user.email "201021212@ingenieria.usac.edu.gt"
           git config --global user.name "benaventiDev"
 
-      - name: Merge with develop
+      - name: Push a Develop
         run: |
           git fetch origin develop:develop
           git checkout develop
-          git merge ${{ github.ref }} --allow-unrelated-histories --no-ff --no-edit
-          git checkout ${{ github.ref }}
-          git merge develop --allow-unrelated-histories --no-ff --no-edit
-      # Instala dependencias y pruebas para el backend principal
+          git merge --allow-unrelated-histories feature-new-endpoint --strategy-option theirs --no-ff --no-commit
+          git commit -m "Despliegue automático a Develop"
+          git push --force https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/benaventiDev/saproyecto2.git develop
+
+  build-and-test:
+    needs: prepare-branches
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.6.0"
+      # Instala dependencias y/o pruebas para el backend principal
       - name: Install Dependencies (Backend)
         run: npm install
         working-directory: ./backend
@@ -53,7 +66,7 @@ jobs:
         run: npm run build && npm test
         working-directory: ./backend-getalltickets
 
-      # Instala dependencias y pruebas para el frontend
+      # Instala dependencias y/o pruebas para el frontend
       - name: Install Dependencies (Frontend)
         run: npm install
         working-directory: ./frontend
