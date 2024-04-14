@@ -1,219 +1,58 @@
-#################Namespace#####################
----
-apiVersion: v1
-kind: Namespace
-metadata: 
-  name: proyecto1
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-#################Config Map#####################
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: db-config
-  namespace: proyecto1
-data:
-  DB_HOST: 34.70.107.58
-  DB_DATABASE: tickets_system
+name: update-and-test
 
-#################Secret Map#####################
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db-secret
-  namespace: proyecto1
-type: Opaque
-data:
-  DB_USER: cm9vdA==
-  DB_PASSWORD: VCplVTw9MEcqWWNCZV5MTQ==
-  TOKEN_SECRET: SoftwareAvanzado
-#################DB Deployment/Service#####################
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: db-ms-deployment
-  namespace: proyecto1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: db-ms
-  template:
-    metadata:
-      labels:
-        app: db-ms
-    spec:
-      containers:
-      - name: db-ms
-        image: benaventi/test:db-ms
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3000
-        env:
-          - name: DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: db-secret
-                key: DB_USER
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: db-secret
-                key: DB_PASSWORD
-          - name: DB_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: db-config
-                key: DB_HOST
-          - name: DB_DATABASE
-            valueFrom:
-              configMapKeyRef:
-                name: db-config
-                key: DB_DATABASE
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: db-ms-service
-  namespace: proyecto1
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: 3000
-      protocol: TCP
-  selector:
-    app: db-ms
+on:
+  push:
+    branches: [master, feature-new-endpoint]
+  pull_request:
+    branches: [master, feature-new-endpoint]
 
-#################Users Deployment/Service#####################
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: users-ms
-  namespace: proyecto1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: users-ms
-  template:
-    metadata:
-      labels:
-        app: users-ms
-    spec:
-      containers:
-      - name: users-ms
-        image: benaventi/test:users-ms
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3000
-        env:
-        - name: TOKEN_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: TOKEN_SECRET
-        - name: DBMICROSERVICE
-          value: http://db-ms-service:80/db
+jobs:
+  update-docker:
+    runs-on: ubuntu-latest
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: users-ms-service
-  namespace: proyecto1
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: 3000 
-      protocol: TCP
-  selector:
-    app: users-ms
-
-#################Tickets Deployment/Service#####################
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: tickets-ms
-  namespace: proyecto1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tickets-ms
-  template:
-    metadata:
-      labels:
-        app: tickets-ms
-    spec:
-      containers:
-      - name: tickets-ms
-        image: benaventi/test:tickets-ms
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3000
-        env:
-        - name: TOKEN_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: TOKEN_SECRET
-        - name: DBMICROSERVICE
-          value: http://db-ms-service:80/db
-        - name: USERS_MICROSERVICE_URL
-          value: http://users-ms-service:80/user
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: tickets-ms-service
-  namespace: proyecto1
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80  # External port
-      targetPort: 3000  # Container's port
-      protocol: TCP
-  selector:
-    app: tickets-ms
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  namespace: proyecto1
-  name: ingress
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /ticket
-        pathType: Prefix 
-        backend:
-          service:
-            name: tickets-ms-service
-            port:
-              number: 80
-      - path: /user
-        pathType: Prefix
-        backend:
-          service:
-            name: users-ms-service
-            port:
-              number: 80
-      - path: /db
-        pathType: Prefix
-        backend:
-          service:
-            name: db-ms-service
-            port:
-              number: 80
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: benaventi/backend2:latest
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: benaventi/frontendsa:latest
+      - name: Build and push backend tickets
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend-getalltickets
+          push: true
+          tags: benaventi/backendtickets:latest
 
 
 
+
+      - name: Deploy to GCP VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCP_VM_IP }}
+          username: "your-vm-username"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path/to/your/project
+            docker-compose up -d

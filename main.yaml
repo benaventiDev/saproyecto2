@@ -75,7 +75,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backendtickets-ms-service
+  name: tickets-service
   namespace:  proyecto-fase2
 spec:
   type: ClusterIP
@@ -158,7 +158,7 @@ spec:
         pathType: Prefix 
         backend:
           service:
-            name: backendtickets-ms-service
+            name: tickets-service
             port:
               number: 80
 
