@@ -18,24 +18,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Set up Git identity
         run: |
           git config --global user.email "201021212@ingenieria.usac.edu.gt"
           git config --global user.name "benaventiDev"
-          git config --global http.extraHeader "AUTHORIZATION: bearer ${{ secrets.PERSONAL_ACCESS_TOKEN }}"
 
-      - name: Force push to develop
+      - name: Push a Develop
         run: |
-          git fetch --all
+          git fetch origin develop:develop
           git checkout develop
-          git reset --hard origin/develop
-          git merge --strategy-option theirs feature-new-endpoint
-          git push --force-with-lease origin develop
-        env:
-          MY_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          git merge --strategy-option theirs main --no-ff --no-commit
+          git commit -m "Despliegue automático a Develop"
+          git push --force origin develop
 
   build-and-test:
     needs: prepare-branches
