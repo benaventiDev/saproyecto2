@@ -34,7 +34,7 @@ jobs:
         run: |
           git fetch origin develop:develop
           git checkout develop
-          git merge --allow-unrelated-histories main --strategy-option theirs --no-ff --no-commit
+          git merge --allow-unrelated-histories feature-new-endpoint --strategy-option theirs --no-ff --no-commit
           git commit -m "Despliegue automático a Develop"
           git push --force https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/benaventiDev/saproyecto2.git develop
 
